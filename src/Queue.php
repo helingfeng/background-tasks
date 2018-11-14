@@ -89,7 +89,7 @@ class Queue
         }
     }
 
-    public function jsonDecode($string)
+    protected function jsonDecode($string)
     {
         return json_decode($string, true);
     }
