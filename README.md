@@ -6,21 +6,10 @@ Laravel 扩展包，基于 MySQL 后台任务管理工具，使用 Laravel Event
 
 ## Composer 安装
 
-添加仓库源：
-
-```json
-"repositories" : [
-    {
-      "type": "git",
-      "url": "https://github.com/Chester-Hee/background-tasks.git"
-    }
-]
-```
-
-添加扩展包：
+仓库源：https://packagist.org/packages/chester/background-mission
 
 ```bash
-composer require chester/background-mission ^1.1
+composer require chester/background-mission
 ```
 
 ## MySQL Migration
