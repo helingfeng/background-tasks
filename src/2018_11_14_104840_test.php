@@ -1,13 +1,10 @@
 <?php
 
-namespace Chester\BackgroundMission;
-
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-class CreateBackgroundTaskTable extends Migration
+class Test extends Migration
 {
     public function up()
     {

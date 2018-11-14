@@ -4,14 +4,14 @@ namespace Chester\BackgroundMission\Commands;
 
 use Illuminate\Console\Command;
 
-class ExecuteCommand extends Command
+class AddTaskCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mission:execute';
+    protected $signature = 'mission:test-add-task';
 
     /**
      * The console command description.
@@ -37,6 +37,8 @@ class ExecuteCommand extends Command
      */
     public function handle()
     {
-        $this->laravel->make('chester.bg.queue')->scheduleRun();
+        $queue = $this->laravel->make('chester.bg.queue');
+        $queue->push(['method' => 'helloWorld']);
+        $queue->push(['method' => 'helloWorldAfter15Seconds']);
     }
 }

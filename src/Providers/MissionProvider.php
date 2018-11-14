@@ -13,6 +13,7 @@ class MissionProvider extends ServiceProvider
     protected $commands = [
         'Chester\BackgroundMission\Commands\ExecuteCommand',
         'Chester\BackgroundMission\Commands\RecordsCommand',
+        'Chester\BackgroundMission\Commands\AddTaskCommand',
     ];
 
     /**
