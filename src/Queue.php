@@ -9,8 +9,10 @@ namespace Chester\BackgroundMission;
 use Chester\BackgroundMission\DataBases\BackgroundTasks;
 use Chester\BackgroundMission\Exceptions\TaskMethodNotFoundException;
 use Illuminate\Console\Application;
-use Illuminate\Console\Scheduling\CacheEventMutex;
+use Illuminate\Console\Scheduling\CacheMutex;
 use Illuminate\Console\Scheduling\Event;
+use Illuminate\Console\Scheduling\Mutex;
+use Illuminate\Container\Container;
 
 class Queue
 {
@@ -43,8 +45,12 @@ class Queue
 
     public function runTask()
     {
-        $mutex = new CacheEventMutex(app('cache'));
+        $container = Container::getInstance();
+        $mutex = $container->bound(Mutex::class)
+            ? $container->make(Mutex::class)
+            : $container->make(CacheMutex::class);
         $event = new Event($mutex, Application::formatCommandString($this->command));
+        $event->runInBackground();
         $event->sendOutputTo($this->getOutputTo());
         $event->run(app());
     }
