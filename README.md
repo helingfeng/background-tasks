@@ -40,7 +40,7 @@ background-tasks/src/2018_11_14_104840_test.php
  Chester\BackgroundMission\Providers\MissionProvider::class
 ```
 
-添加 Schedule 任务：
+添加 Schedule 任务，否则任务永远不会执行，状态为 init 初始化状态：
 
 ```php
 $schedule->command('mission:execute')->everyMinute()->runInBackground();
@@ -58,12 +58,13 @@ $ php artisan mission:test-add-task
 
 ```markdown
 $ php artisan mission:records
-+------------------+--------------------------+--------+---------+--------+---------------------------------+
-| unique_id        | method                   | type   | state   | params | content                         |
-+------------------+--------------------------+--------+---------+--------+---------------------------------+
-| bboagxnzbrnxurkx | helloWorld               | system | success | []     | hello world.                    |
-| gngkiytndfratiho | helloWorldAfter15Seconds | system | success | []     | after 15 seconds , hello world. |
-+------------------+--------------------------+--------+---------+--------+---------------------------------+
++------------------+--------------------------+--------+---------+--------+-------------------+
+| unique_id        | method                   | type   | state   | params | content           |
++------------------+--------------------------+--------+---------+--------+-------------------+
+| bboagxnzbrnxurkx | helloWorld               | system | success | []     | hello world.      |
+| gngkiytndfratiho | helloWorldAfter15Seconds | system | success | []     | after 15 seconds. |
++------------------+--------------------------+--------+---------+--------+-------------------+
 ```
+
 
 
