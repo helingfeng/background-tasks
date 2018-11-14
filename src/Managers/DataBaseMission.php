@@ -49,7 +49,7 @@ class DataBaseMission implements MissionInterface
             $task_ids = [$task_ids];
         }
         return BackgroundTasks::whereIn('unique_id', $task_ids)
-            ->update(['state' => $state, 'content' => $content]);
+            ->update(['state' => $state, 'content' => $content, 'modified_date' => date('Y-m-d H:i:s')]);
     }
 
     public function getTaskById($task_id)
