@@ -9,6 +9,7 @@ namespace Chester\BackgroundMission;
 use Chester\BackgroundMission\DataBases\BackgroundTasks;
 use Chester\BackgroundMission\Exceptions\TaskMethodNotFoundException;
 use Illuminate\Console\Scheduling\CallbackEvent;
+use Illuminate\Support\Str;
 
 class Queue
 {
@@ -43,7 +44,7 @@ class Queue
     {
         foreach ($this->getKernelEvents() as $event) {
             /** @var \Illuminate\Console\Scheduling\Event $event */
-            if($this->isBackgroundEvent($event)){
+            if ($this->isBackgroundEvent($event)) {
 
                 $event->sendOutputTo($this->getOutputTo());
                 $event->run(app());
@@ -67,7 +68,7 @@ class Queue
             return false;
         }
         $command = "mission:execute";
-        return $event->command == $command;
+        return Str::contains($event->command, $command);
     }
 
     protected function getKernelEvents()

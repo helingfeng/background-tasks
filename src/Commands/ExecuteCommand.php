@@ -37,6 +37,8 @@ class ExecuteCommand extends Command
      */
     public function handle()
     {
+        $this->output->writeln('chester.queue.start');
         $this->laravel->make('chester.bg.queue')->frequencyRun();
+        $this->output->writeln('chester.queue.end');
     }
 }

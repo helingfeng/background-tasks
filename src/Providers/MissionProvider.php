@@ -2,7 +2,6 @@
 
 namespace Chester\BackgroundMission\Providers;
 
-use Chester\BackgroundMission\Logic;
 use Chester\BackgroundMission\Managers\DataBaseMission;
 use Chester\BackgroundMission\Queue;
 use Illuminate\Support\ServiceProvider;
@@ -38,7 +37,8 @@ class MissionProvider extends ServiceProvider
         });
 
         $this->app->singleton('chester.bg.logic', function () {
-            return new Logic();
+            $class_name = config('const.background_logic', '\Chester\BackgroundMission\Logic');
+            return new $class_name();
         });
 
         $this->app->singleton('chester.bg.queue', function () {
