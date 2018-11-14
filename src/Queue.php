@@ -35,9 +35,8 @@ class Queue
 
     public function push($params)
     {
-        $result = $this->manager->addTask($params);
-        $this->runTask();
-        return $result;
+        $this->manager->addTask($params);
+        return $this;
     }
 
     public function runTask()
@@ -90,11 +89,12 @@ class Queue
             $method = $task['method'];
             $params = $this->jsonDecode($task['params']);
             try {
-                if (method_exists($this->executor, $method)) {
+                if (!method_exists($this->executor, $method)) {
                     throw new TaskMethodNotFoundException();
                 }
             } catch (\Exception $exception) {
                 $this->manager->changeTaskStateByIds($task['unique_id'], BackgroundTasks::STATE_FAIL, $exception->getMessage());
+                continue;
             }
             $result = $this->executor->$method($params);
             $state = $result['state'] ? BackgroundTasks::STATE_SUCCESS : BackgroundTasks::STATE_FAIL;
