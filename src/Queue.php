@@ -8,8 +8,9 @@ namespace Chester\BackgroundMission;
 
 use Chester\BackgroundMission\DataBases\BackgroundTasks;
 use Chester\BackgroundMission\Exceptions\TaskMethodNotFoundException;
-use Illuminate\Console\Scheduling\CallbackEvent;
-use Illuminate\Support\Str;
+use Illuminate\Console\Application;
+use Illuminate\Console\Scheduling\CacheEventMutex;
+use Illuminate\Console\Scheduling\Event;
 
 class Queue
 {
@@ -17,6 +18,7 @@ class Queue
     protected $executor;
 
     protected $frequency = 1;
+    protected $command = 'mission:execute';
     /**
      * @var string out put file for command.
      */
@@ -41,16 +43,10 @@ class Queue
 
     public function runTask()
     {
-        foreach ($this->getKernelEvents() as $event) {
-            /** @var \Illuminate\Console\Scheduling\Event $event */
-            if ($this->isBackgroundEvent($event)) {
-
-                $event->sendOutputTo($this->getOutputTo());
-                $event->run(app());
-
-                break;
-            }
-        }
+        $mutex = new CacheEventMutex(app('cache'));
+        $event = new Event($mutex, Application::formatCommandString($this->command));
+        $event->sendOutputTo($this->getOutputTo());
+        $event->run(app());
     }
 
     protected function getOutputTo()
@@ -59,21 +55,6 @@ class Queue
             $this->sendOutputTo = storage_path('app/background-task.output');
         }
         return $this->sendOutputTo;
-    }
-
-    protected function isBackgroundEvent($event)
-    {
-        if ($event instanceof CallbackEvent) {
-            return false;
-        }
-        $command = "mission:execute";
-        return Str::contains($event->command, $command);
-    }
-
-    protected function getKernelEvents()
-    {
-        app()->make('Illuminate\Contracts\Console\Kernel');
-        return app()->make('Illuminate\Console\Scheduling\Schedule')->events();
     }
 
     public function frequencyRun()

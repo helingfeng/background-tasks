@@ -26,12 +26,6 @@ background-tasks/src/2018_11_14_104840_test.php
  Chester\BackgroundMission\Providers\MissionProvider::class
 ```
 
-添加 Schedule 任务，这个在 push 任务时，主动触发执行：
-
-```php
-$schedule->command('mission:execute')->daily()->runInBackground();
-```
-
 ## 命令测试
 
 添加任务：
