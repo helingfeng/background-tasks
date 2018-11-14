@@ -1,2 +1,7 @@
-# background-exporter
-基于 Mysql 的异步 Web 导出工具。满足后台管理导出大数据的需求
+# background-tasks
+
+Laravel 扩展包，基于 MySQL 后台任务管理工具
+
+- 管理和监控任务执行
+- 让后台任务执行更简单
+- 支持分布式集群

@@ -9,6 +9,12 @@ use Illuminate\Support\ServiceProvider;
 
 class MissionProvider extends ServiceProvider
 {
+
+    protected $commands = [
+        'Chester\BackgroundMission\Commands\ExecuteCommand',
+        'Chester\BackgroundMission\Commands\RecordsCommand',
+    ];
+
     /**
      * Bootstrap any application services.
      *
@@ -40,5 +46,7 @@ class MissionProvider extends ServiceProvider
                 $this->app['chester.bg.logic']
             );
         });
+
+        $this->commands($this->commands);
     }
 }
