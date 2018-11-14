@@ -11,6 +11,8 @@ class BackgroundTasks extends Model
     const STATE_SUCCESS = 'success';
     const STATE_FAIL = 'fail';
 
+    public $timestamps = false;
+
     public function __construct(array $attributes = [])
     {
         $this->setTable('admin_background_tasks');

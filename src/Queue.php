@@ -7,6 +7,7 @@ namespace Chester\BackgroundMission;
 
 
 use Chester\BackgroundMission\DataBases\BackgroundTasks;
+use Chester\BackgroundMission\Exceptions\TaskMethodNotFoundException;
 
 class Queue
 {
@@ -44,6 +45,13 @@ class Queue
         foreach ($taskList as $task) {
             $method = $task['method'];
             $params = $this->jsonDecode($task['params']);
+            try {
+                if (method_exists($this->executor, $method)) {
+                    throw new TaskMethodNotFoundException();
+                }
+            } catch (\Exception $exception) {
+                $this->manager->changeTaskStateByIds($task['unique_id'], BackgroundTasks::STATE_FAIL, $exception->getMessage());
+            }
             $result = $this->executor->$method($params);
             $state = $result['state'] ? BackgroundTasks::STATE_SUCCESS : BackgroundTasks::STATE_FAIL;
             $this->manager->changeTaskStateByIds($task['unique_id'], $state, $result['content']);

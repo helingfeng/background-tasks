@@ -40,10 +40,21 @@ class RecordsCommand extends Command
     {
         $records = $this->laravel->make('chester.bg.queue')->records();
 
+        $records = collect($records)->map(function ($item) {
+            return [
+                'unique_id' => $item['unique_id'],
+                'method' => $item['method'],
+                'type' => $item['type'],
+                'state' => $item['state'],
+                'params' => $item['params'],
+                'content' => $item['content'],
+            ];
+        })->toArray();
+
         $heading = ['unique_id', 'method', 'type', 'state', 'params', 'content'];
 
         $table = new Table($this->output);
-        $table->setHeaders($heading)->setRows(collect($records)->only($heading)->toArray());
+        $table->setHeaders($heading)->setRows($records);
         $table->render();
     }
 }
