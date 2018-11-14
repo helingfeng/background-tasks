@@ -3,6 +3,7 @@
 namespace Chester\BackgroundMission\Commands;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Helper\Table;
 
 class RecordsCommand extends Command
 {
@@ -37,7 +38,12 @@ class RecordsCommand extends Command
      */
     public function handle()
     {
-//        $this->output->writeln();
-        $this->laravel->make('chester.bg.queue')->records();
+        $records = $this->laravel->make('chester.bg.queue')->records();
+
+        $heading = ['unique_id', 'method', 'type', 'state', 'params', 'content'];
+
+        $table = new Table($this->output);
+        $table->setHeaders($heading)->setRows(collect($records)->only($heading)->toArray());
+        $table->render();
     }
 }

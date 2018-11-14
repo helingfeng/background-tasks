@@ -12,7 +12,7 @@ interface MissionInterface
 
     public function getTaskById($task_id);
 
-    public function changeTaskStateByIds($task_id, $state, $content = '');
+    public function changeTaskStateByIds($task_ids, $state, $content = '');
 
     public function getLastInitTasks($limit = 5);
 

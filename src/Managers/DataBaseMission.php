@@ -5,6 +5,7 @@
 
 namespace Chester\BackgroundMission\Managers;
 
+use Chester\BackgroundMission\DataBases\BackgroundTasks;
 use Chester\BackgroundMission\MissionInterface;
 
 class DataBaseMission implements MissionInterface
@@ -16,73 +17,60 @@ class DataBaseMission implements MissionInterface
 
     public function getLastInitTasks($limit = 5)
     {
-        // TODO: Implement getLastInitTasks() method.
+        return BackgroundTasks::where('state', BackgroundTasks::STATE_INIT)->orderBy('created_date', 'desc')->limit($limit)->get()->toArray();
     }
 
     public function getLastTasksByType($type = 'system', $limit = 10)
     {
-        // TODO: Implement getLastTasksByType() method.
+        return BackgroundTasks::where('type', $type)->orderBy('created_date', 'desc')->limit($limit)->get()->toArray();
     }
 
     public function hasInitTask()
     {
-        // TODO: Implement hasInitTask() method.
+        return BackgroundTasks::where('state', BackgroundTasks::STATE_INIT)->first() ? true : false;
     }
 
-    public function addTask($task)
+    public function addTask($param)
     {
-        // TODO: Implement addTask() method.
+        $task = new BackgroundTasks();
+        $task->unique_id = $this->createNonceString();
+        $task->method = $param['method'];
+        $task->params = $this->jsonEncode($param['params']);
+        $task->type = $param['type'];
+        $task->created_date = date('Y-m-d H:i:s');
+        $task->modified_date = date('Y-m-d H:i:s');
+        $task->state = BackgroundTasks::STATE_INIT;
+        return $task->save();
     }
 
-    public function changeTaskStateByIds($task_id, $state, $content = '')
+    public function changeTaskStateByIds($task_ids, $state, $content = '')
     {
-        // TODO: Implement changeTaskStateById() method.
+        if (is_string($task_ids)) {
+            $task_ids = [$task_ids];
+        }
+        return BackgroundTasks::whereIn('unique_id', $task_ids)
+            ->update(['state' => $state, 'content' => $content]);
     }
 
     public function getTaskById($task_id)
     {
-        // TODO: Implement getTaskById() method.
+        return BackgroundTasks::where('unique_id', $task_id)->first()->toArray();
     }
 
-    public function getLastTasks($limit = 5)
+    public function createNonceString($length = 16)
     {
-        // TODO: Implement getLastTasks() method.
+        $chars = "abcdefghijklmnopqrstuvwxyz";
+        $str = "";
+        for ($i = 0; $i < $length; $i++) {
+            $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+        }
+        return $str;
     }
-//    /**
-//     * @return string
-//     */
-//    public function getTableName()
-//    {
-//        return $this->table_name;
-//    }
-//
-//    public function get($condition, $limit = 10)
-//    {
-//        // $condition = ['type' => 'system']
-//        return DB::table($this->table_name)->where($condition)->limit($limit)->get()->toArray();
-//    }
-//
-//    public function insert($method, $params, $type = 'system')
-//    {
-//        $task['unique_id'] = cbb_create_nonce_str(15);
-//        $task['method'] = $method;
-//        $task['params'] = json_encode($params, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-//        $task['created_date'] = date('Y-m-d H:i:s');
-//        $task['modified_date'] = date('Y-m-d H:i:s');
-//        $task['type'] = $type;
-//        $result = DB::table($this->table_name)->insert($task);
-//        return $result ? $task['unique_id'] : null;
-//    }
-//
-//    public function updateTask($unique_id, $data)
-//    {
-//        $result = DB::table($this->table_name)->where(['unique_id' => $unique_id])->update($data);
-//        return $result !== false;
-//    }
-//
-//    public function updateTasks($ids, $data)
-//    {
-//        $result = DB::table($this->table_name)->whereIn('unique_id', $ids)->update($data);
-//        return $result !== false;
-//    }
+
+    public function jsonEncode($param)
+    {
+        return json_encode($param, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+
 }

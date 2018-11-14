@@ -43,11 +43,15 @@ class Queue
 
         foreach ($taskList as $task) {
             $method = $task['method'];
-            $params = json_decode($task['params'], true);
+            $params = $this->jsonDecode($task['params']);
             $result = $this->executor->$method($params);
             $state = $result['state'] ? BackgroundTasks::STATE_SUCCESS : BackgroundTasks::STATE_FAIL;
             $this->manager->changeTaskStateByIds($task['unique_id'], $state, $result['content']);
         }
     }
 
+    public function jsonDecode($string)
+    {
+        return json_decode($string, true);
+    }
 }
