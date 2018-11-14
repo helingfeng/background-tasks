@@ -4,6 +4,8 @@
 
 Laravel 扩展包，基于 MySQL 后台任务管理工具，使用 Laravel Event Console 执行任务，负责管理和监控任务代码执行状态，让后台任务执行更简单。
 
+![demo](demo1.png)
+
 ## Composer 安装
 
 仓库源：https://packagist.org/packages/chester/background-mission
