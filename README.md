@@ -1,6 +1,6 @@
 # Background-Tasks
 
-Laravel 扩展包，基于 MySQL 后台任务管理工具，复制管理和监控任务代码执行状态，让后台任务执行更简单。
+Laravel 扩展包，基于 MySQL 后台任务管理工具，负责管理和监控任务代码执行状态，让后台任务执行更简单。
 
 ## Composer 安装
 
