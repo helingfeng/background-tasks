@@ -8,13 +8,18 @@ namespace Chester\BackgroundMission;
 
 use Chester\BackgroundMission\DataBases\BackgroundTasks;
 use Chester\BackgroundMission\Exceptions\TaskMethodNotFoundException;
+use Illuminate\Console\Scheduling\CallbackEvent;
 
 class Queue
 {
     protected $manager;
     protected $executor;
 
-    protected $frequency = 5;
+    protected $frequency = 1;
+    /**
+     * @var string out put file for command.
+     */
+    protected $sendOutputTo;
 
     public function __construct(MissionInterface $manager, Logic $executor)
     {
@@ -29,15 +34,53 @@ class Queue
 
     public function push($params)
     {
-        return $this->manager->addTask($params);
+        $result = $this->manager->addTask($params);
+        $this->runTask();
+        return $result;
     }
 
-    public function scheduleRun()
+    public function runTask()
+    {
+        foreach ($this->getKernelEvents() as $event) {
+            /** @var \Illuminate\Console\Scheduling\Event $event */
+            if($this->isBackgroundEvent($event)){
+
+                $event->sendOutputTo($this->getOutputTo());
+                $event->run(app());
+
+                break;
+            }
+        }
+    }
+
+    protected function getOutputTo()
+    {
+        if (!$this->sendOutputTo) {
+            $this->sendOutputTo = storage_path('app/background-task.output');
+        }
+        return $this->sendOutputTo;
+    }
+
+    protected function isBackgroundEvent($event)
+    {
+        if ($event instanceof CallbackEvent) {
+            return false;
+        }
+        $command = "mission:execute";
+        return $event->command == $command;
+    }
+
+    protected function getKernelEvents()
+    {
+        app()->make('Illuminate\Contracts\Console\Kernel');
+        return app()->make('Illuminate\Console\Scheduling\Schedule')->events();
+    }
+
+    public function frequencyRun()
     {
         if (!$this->manager->hasInitTask()) {
             return;
         }
-
         $taskList = $this->manager->getLastInitTasks($this->frequency);
         $task_ids = collect($taskList)->pluck('unique_id');
         $this->manager->changeTaskStateByIds($task_ids, BackgroundTasks::STATE_EXECUTING);
