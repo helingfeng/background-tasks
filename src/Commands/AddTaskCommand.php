@@ -38,6 +38,6 @@ class AddTaskCommand extends Command
     public function handle()
     {
         $queue = $this->laravel->make('chester.bg.queue');
-        $queue->push(['method' => 'helloWorldAfter15Seconds'])->runTask();
+        $queue->push(['method' => 'helloWorld'])->runTask();
     }
 }

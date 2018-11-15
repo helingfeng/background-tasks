@@ -10,13 +10,23 @@ class Logic
 {
     public function helloWorld()
     {
-        return $this->response(1, 'hello world.');
-    }
+        $filename = storage_path('app') . '/' . date('YmdHis') . ".csv";
 
-    public function helloWorldAfter15Seconds()
-    {
-        sleep(15);
-        return $this->response(1, 'after 15 seconds , hello world.');
+        $handle = fopen($filename, 'w');
+        fwrite($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        $cur_page = 0;
+        fputcsv($handle, ['num', 'datetime']);
+        do {
+            $cur_page++;
+            fputcsv($handle, [[$cur_page, date('Y-m-d H:i:s')]]);
+
+            if ($cur_page >= 100000) {
+                break;
+            }
+        } while (true);
+
+        return $this->response(1, "output target file dir: {$filename}");
     }
 
     protected function response($state = 1, $content = '')
