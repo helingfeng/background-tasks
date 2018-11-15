@@ -67,7 +67,7 @@ class DataBaseMission implements MissionInterface
         return $str;
     }
 
-    public function jsonEncode($param)
+    protected function jsonEncode($param)
     {
         return json_encode($param, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }

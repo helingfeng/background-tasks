@@ -19,7 +19,16 @@ class Queue
     protected $manager;
     protected $executor;
 
+    /**
+     * 执行频率设置
+     * @var int
+     */
     protected $frequency = 1;
+
+    /**
+     * Commands 命令名称
+     * @var string
+     */
     protected $command = 'mission:execute';
     /**
      * @var string out put file for command.
@@ -32,17 +41,31 @@ class Queue
         $this->executor = $executor;
     }
 
+    /**
+     * 获取任务记录
+     * @param string $type
+     * @param int $limit
+     * @return mixed
+     */
     public function records($type = 'system', $limit = 10)
     {
         return $this->manager->getLastTasksByType($type, $limit);
     }
 
+    /**
+     * 添加任务
+     * @param $params
+     * @return $this
+     */
     public function push($params)
     {
         $this->manager->addTask($params);
         return $this;
     }
 
+    /**
+     * 执行任务，需要手动调用，否则无法触发命令
+     */
     public function runTask()
     {
         $container = Container::getInstance();
@@ -79,11 +102,12 @@ class Queue
                 if (!method_exists($this->executor, $method)) {
                     throw new TaskMethodNotFoundException();
                 }
+                // 捕获任务执行中出现的异常
+                $result = $this->executor->$method($params);
             } catch (\Exception $exception) {
                 $this->manager->changeTaskStateByIds($task['unique_id'], BackgroundTasks::STATE_FAIL, $exception->getMessage());
                 continue;
             }
-            $result = $this->executor->$method($params);
             $state = $result['state'] ? BackgroundTasks::STATE_SUCCESS : BackgroundTasks::STATE_FAIL;
             $this->manager->changeTaskStateByIds($task['unique_id'], $state, $result['content']);
         }
