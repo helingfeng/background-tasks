@@ -32,9 +32,9 @@ class Queue
         $this->executor = $executor;
     }
 
-    public function records($type = 'system')
+    public function records($type = 'system', $limit = 10)
     {
-        return $this->manager->getLastTasksByType($type);
+        return $this->manager->getLastTasksByType($type, $limit);
     }
 
     public function push($params)
