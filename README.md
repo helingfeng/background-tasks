@@ -16,7 +16,7 @@ composer require chester/background-mission
 
 ## MySQL Migration
 
-创建数据表：
+创建数据表：不创建数据表是无法正常提交任务的
 
 ```bash
 background-tasks/src/2018_11_14_104840_test.php

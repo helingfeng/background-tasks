@@ -6,9 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class BackgroundTasks extends Model
 {
+    /**
+     * 初始化
+     */
     const STATE_INIT = 'init';
+
+    /**
+     * 执行中
+     */
     const STATE_EXECUTING = 'executing';
+
+    /**
+     * 执行完成
+     */
     const STATE_SUCCESS = 'success';
+
+    /**
+     * 执行失败
+     */
     const STATE_FAIL = 'fail';
 
     public $timestamps = false;

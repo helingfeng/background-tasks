@@ -10,6 +10,7 @@ class Logic
 {
     public function helloWorld()
     {
+        // 测试后台导出文件
         $filename = storage_path('app') . '/' . date('YmdHis') . ".csv";
 
         $handle = fopen($filename, 'w');
@@ -21,6 +22,7 @@ class Logic
             $cur_page++;
             fputcsv($handle, [[$cur_page, date('Y-m-d H:i:s')]]);
 
+            // 模拟10万条记录
             if ($cur_page >= 100000) {
                 break;
             }
