@@ -8,6 +8,8 @@ namespace Chester\BackgroundMission;
 
 interface MissionInterface
 {
+    public function existTask($method);
+
     public function addTask($task);
 
     public function getTaskById($task_id);

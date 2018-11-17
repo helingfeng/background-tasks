@@ -7,7 +7,9 @@ namespace Chester\BackgroundMission;
 
 
 use Chester\BackgroundMission\DataBases\BackgroundTasks;
+use Chester\BackgroundMission\Exceptions\MethodIsRunningException;
 use Chester\BackgroundMission\Exceptions\TaskMethodNotFoundException;
+use Chester\BackgroundMission\Exceptions\TimeOutException;
 use Illuminate\Console\Application;
 use Illuminate\Console\Scheduling\CacheMutex;
 use Illuminate\Console\Scheduling\Event;
@@ -35,10 +37,17 @@ class Queue
      */
     protected $sendOutputTo;
 
+    protected $withoutRepeatMethod = false;
+
     public function __construct(MissionInterface $manager, Logic $executor)
     {
         $this->manager = $manager;
         $this->executor = $executor;
+    }
+
+    public function withoutRepeatMethod()
+    {
+        $this->withoutRepeatMethod = true;
     }
 
     /**
@@ -53,20 +62,22 @@ class Queue
     }
 
     /**
-     * 添加任务
      * @param $params
-     * @return $this
+     * @throws MethodIsRunningException
      */
     public function push($params)
     {
+        if ($this->withoutRepeatMethod && $this->manager->existTask($params['method'])) {
+            throw new MethodIsRunningException();
+        }
         $this->manager->addTask($params);
-        return $this;
+        $this->runTask();
     }
 
     /**
      * 执行任务，需要手动调用，否则无法触发命令
      */
-    public function runTask()
+    protected function runTask()
     {
         $container = Container::getInstance();
         $mutex = $container->bound(Mutex::class)
@@ -99,11 +110,11 @@ class Queue
             $method = $task['method'];
             $params = $this->jsonDecode($task['params']);
             try {
-                if (!method_exists($this->executor, $method)) {
+                if (method_exists($this->executor, $method)) {
+                    $result = $this->executor->$method($params);
+                } else {
                     throw new TaskMethodNotFoundException();
                 }
-                // 捕获任务执行中出现的异常
-                $result = $this->executor->$method($params);
             } catch (\Exception $exception) {
                 $this->manager->changeTaskStateByIds($task['unique_id'], BackgroundTasks::STATE_FAIL, $exception->getMessage());
                 continue;

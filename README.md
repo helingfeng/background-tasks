@@ -106,3 +106,13 @@ $ php artisan mission:records
 | tjyfakjpdghjgvba | myTest | system | success   | []     | my test |
 +------------------+--------+--------+-----------+--------+---------+
 ```
+
+## 代码调试
+
+以前修改扩展包时，总是为调试而头疼。现在，我推荐一种开发调试方式：
+
+1.首先，克隆一份 laravel 源代码；
+2.然后在 laravel 根目录下将你的扩展包克隆下来，
+3.然后配置 laravel composer.json 映射 package 目录，就可以开始测试（ provider alias ）
+
+修改完代码，直接提交就 OK
