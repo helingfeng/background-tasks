@@ -2,6 +2,7 @@
 
 namespace Chester\BackgroundMission\Commands;
 
+use Chester\BackgroundMission\Queue;
 use Illuminate\Console\Command;
 
 class ExecuteCommand extends Command
@@ -37,8 +38,10 @@ class ExecuteCommand extends Command
      */
     public function handle()
     {
+        /** @var  $queue Queue */
+        $queue = $this->laravel->make('chester.bg.queue');
         $this->output->writeln('chester.queue.start');
-        $this->laravel->make('chester.bg.queue')->frequencyRun();
+        $queue->frequencyRun();
         $this->output->writeln('chester.queue.end');
     }
 }

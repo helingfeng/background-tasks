@@ -19,7 +19,7 @@ class RecordsCommand extends Command
      *
      * @var string
      */
-    protected $description = '后台任务管理工具，查询任务列表';
+    protected $description = '查询任务列表';
 
     /**
      * Create a new command instance.

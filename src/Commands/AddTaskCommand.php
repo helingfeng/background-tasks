@@ -2,6 +2,7 @@
 
 namespace Chester\BackgroundMission\Commands;
 
+use Chester\BackgroundMission\Queue;
 use Illuminate\Console\Command;
 
 class AddTaskCommand extends Command
@@ -11,14 +12,14 @@ class AddTaskCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'mission:test-add-task';
+    protected $signature = 'mission:add';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '后台任务管理工具，执行任务';
+    protected $description = '测试添加一个任务到后台执行';
 
     /**
      * Create a new command instance.
@@ -37,7 +38,12 @@ class AddTaskCommand extends Command
      */
     public function handle()
     {
+        /** @var $queue Queue */
         $queue = $this->laravel->make('chester.bg.queue');
-        $queue->push(['method' => 'helloWorld'])->runTask();
+        try {
+            $queue->withoutRepeatMethod()->push(['method' => 'helloWorld']);
+        } catch (\Exception $exception) {
+            $this->output->writeln($exception->getMessage());
+        }
     }
 }

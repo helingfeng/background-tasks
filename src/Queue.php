@@ -48,6 +48,7 @@ class Queue
     public function withoutRepeatMethod()
     {
         $this->withoutRepeatMethod = true;
+        return $this;
     }
 
     /**
