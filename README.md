@@ -62,6 +62,7 @@ $ php artisan mission:add
 
 查看执行状态：
 
+看到任务已经进入后台执行，并显示 Executing 状态。
 ```markdown
 ➜  laravel git:(5.5) ✗ php artisan mission:records
 +------------------+------------+--------+-----------+--------+--------------------+
@@ -69,9 +70,10 @@ $ php artisan mission:add
 +------------------+------------+--------+-----------+--------+--------------------+
 | nauaxnrfnuflwcqn | helloWorld | system | executing | []     |                    |
 +------------------+------------+--------+-----------+--------+--------------------+
+```
 
-看到任务已经进入后台执行，并显示 Executing 状态。
-
+经过一段时间后台，可以看到任务已经完成，并且输出 Content 包含文件 Csv 所在的路径，同时任务为 Success 状态。
+```markdown
 ➜  laravel git:(5.5) ✗ php artisan mission:records
 +------------------+------------+--------+---------+--------+---------------------------------------------------------------------+
 | unique_id        | method     | type   | state   | params | content                                                             | 
@@ -79,7 +81,6 @@ $ php artisan mission:add
 | nauaxnrfnuflwcqn | helloWorld | system | success | []     | output target file dir: /www/laravel/storage/app/20181117151438.csv |
 +------------------+------------+--------+---------+--------+---------------------------------------------------------------------+
 ```
-经过一段时间后台，可以看到任务已经完成，并且输出 Content 包含文件 Csv 所在的路径，同时任务为 Success 状态。
 
 ## 自定义 Logic Functions
 
