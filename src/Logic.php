@@ -20,10 +20,10 @@ class Logic
         fputcsv($handle, ['num', 'datetime']);
         do {
             $cur_page++;
-            fputcsv($handle, [[$cur_page, date('Y-m-d H:i:s')]]);
+            fputcsv($handle, [$cur_page, date('Y-m-d H:i:s')]);
 
-            // 模拟10万条记录
-            if ($cur_page >= 100000) {
+            // 模拟1000万条记录
+            if ($cur_page >= 10000000) {
                 break;
             }
         } while (true);

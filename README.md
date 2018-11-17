@@ -30,7 +30,7 @@ background-tasks/src/2018_11_14_104840_test.php
 
 ## 测试示例
 
-假设后台需要导出10万条数据，并下载这个文件，下面模拟导出 csv
+假设后台需要导出1000万条数据，并下载这个文件，下面模拟导出 csv
 
 ```php
 // hello world. 测试10万条记录后台导出 csv 文件
@@ -44,9 +44,9 @@ public function helloWorld()
     fputcsv($handle, ['num', 'datetime']);
     do {
         $cur_page++;
-        fputcsv($handle, [[$cur_page, date('Y-m-d H:i:s')]]);
+        fputcsv($handle, [$cur_page, date('Y-m-d H:i:s')]);
         // 模拟10万条记录
-        if ($cur_page >= 100000) {
+        if ($cur_page >= 10000000) {
             break;
         }
     } while (true);
@@ -63,13 +63,23 @@ $ php artisan mission:add
 查看执行状态：
 
 ```markdown
-$ php artisan mission:records
-+------------------+--------------------------+--------+---------+--------+-------------------+
-| unique_id        | method                   | type   | state   | params | content           |
-+------------------+--------------------------+--------+---------+--------+-------------------+
-| gngkiytndfratiho | helloWorldAfter15Seconds | system | success | []     | after 15 seconds. |
-+------------------+--------------------------+--------+---------+--------+-------------------+
+➜  laravel git:(5.5) ✗ php artisan mission:records
++------------------+------------+--------+-----------+--------+--------------------+
+| unique_id        | method     | type   | state     | params | content            |
++------------------+------------+--------+-----------+--------+--------------------+
+| nauaxnrfnuflwcqn | helloWorld | system | executing | []     |                    |
++------------------+------------+--------+-----------+--------+--------------------+
+
+看到任务已经进入后台执行，并显示 Executing 状态。
+
+➜  laravel git:(5.5) ✗ php artisan mission:records
++------------------+------------+--------+---------+--------+---------------------------------------------------------------------+
+| unique_id        | method     | type   | state   | params | content                                                             | 
++------------------+------------+--------+---------+--------+---------------------------------------------------------------------+
+| nauaxnrfnuflwcqn | helloWorld | system | success | []     | output target file dir: /www/laravel/storage/app/20181117151438.csv |
++------------------+------------+--------+---------+--------+---------------------------------------------------------------------+
 ```
+经过一段时间后台，可以看到任务已经完成，并且输出 Content 包含文件 Csv 所在的路径，同时任务为 Success 状态。
 
 ## 自定义 Logic Functions
 

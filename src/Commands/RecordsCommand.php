@@ -48,10 +48,12 @@ class RecordsCommand extends Command
                 'state' => $item['state'],
                 'params' => $item['params'],
                 'content' => $item['content'],
+                'modified_date' => $item['modified_date'],
+                'created_date' => $item['created_date'],
             ];
         })->toArray();
 
-        $heading = ['unique_id', 'method', 'type', 'state', 'params', 'content'];
+        $heading = ['unique_id', 'method', 'type', 'state', 'params', 'content', 'modified_date', 'created_date'];
 
         $table = new Table($this->output);
         $table->setHeaders($heading)->setRows($records);
