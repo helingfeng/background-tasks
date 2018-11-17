@@ -15,6 +15,11 @@ class DataBaseMission implements MissionInterface
 
     }
 
+    public function existTask($method)
+    {
+        return BackgroundTasks::where('method', $method)->where('state', BackgroundTasks::STATE_EXECUTING)->first() ? true : false;
+    }
+
     public function getLastInitTasks($limit = 5)
     {
         return BackgroundTasks::where('state', BackgroundTasks::STATE_INIT)->orderBy('created_date', 'desc')->limit($limit)->get()->toArray();
@@ -37,6 +42,7 @@ class DataBaseMission implements MissionInterface
         $task->method = isset($param['method']) ? $param['method'] : 'helloWorld';
         $task->params = $this->jsonEncode(isset($param['params']) ? $param['params'] : []);
         $task->type = isset($param['type']) ? $param['type'] : 'system';
+        $task->content = '';
         $task->created_date = date('Y-m-d H:i:s');
         $task->modified_date = date('Y-m-d H:i:s');
         $task->state = BackgroundTasks::STATE_INIT;
