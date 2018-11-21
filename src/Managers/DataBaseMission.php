@@ -38,7 +38,7 @@ class DataBaseMission implements MissionInterface
     public function addTask($param)
     {
         $task = new BackgroundTasks();
-        $task->unique_id = $this->createNonceString();
+        $task->unique_id = $this->createTaskId();
         $task->method = isset($param['method']) ? $param['method'] : 'helloWorld';
         $task->params = $this->jsonEncode(isset($param['params']) ? $param['params'] : []);
         $task->type = isset($param['type']) ? $param['type'] : 'system';
@@ -63,14 +63,9 @@ class DataBaseMission implements MissionInterface
         return BackgroundTasks::where('unique_id', $task_id)->first()->toArray();
     }
 
-    public function createNonceString($length = 16)
+    protected function createTaskId()
     {
-        $chars = "abcdefghijklmnopqrstuvwxyz";
-        $str = "";
-        for ($i = 0; $i < $length; $i++) {
-            $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
-        }
-        return $str;
+        return uniqid("task_");
     }
 
     protected function jsonEncode($param)
