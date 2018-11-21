@@ -13,6 +13,7 @@ class MissionProvider extends ServiceProvider
         'Chester\BackgroundMission\Commands\ExecuteCommand',
         'Chester\BackgroundMission\Commands\RecordsCommand',
         'Chester\BackgroundMission\Commands\AddTaskCommand',
+        'Chester\BackgroundMission\Commands\TestMethodCommand',
     ];
 
     /**
