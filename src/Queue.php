@@ -80,7 +80,7 @@ class Queue
      */
     protected function runTask()
     {
-        $container = Container::getInstance();
+        $container = app();
         $mutex = $container->bound(Mutex::class)
             ? $container->make(Mutex::class)
             : $container->make(CacheMutex::class);
