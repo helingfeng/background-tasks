@@ -7,7 +7,7 @@ Laravel 扩展包，基于 MySQL 后台任务管理工具，使用 Laravel Event
 ## 任务选项
 
 参数名称|是否必填|描述|
----|:--:|---:|
+---|:--:|:---|
 method|是|任务执行方法 Logic|
 params|否|执行 Method 所需要的参数|
 type|否|任务分类，自定义字符串|
