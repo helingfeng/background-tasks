@@ -42,9 +42,7 @@ class DataBaseMission implements MissionInterface
         $task->method = isset($param['method']) ? $param['method'] : 'helloWorld';
         $task->params = $this->jsonEncode(isset($param['params']) ? $param['params'] : []);
         $task->type = isset($param['type']) ? $param['type'] : 'system';
-        $task->content = '';
-        $task->created_date = date('Y-m-d H:i:s');
-        $task->modified_date = date('Y-m-d H:i:s');
+        $task->creator = isset($param['creator']) ? $param['creator'] : 'undefined';
         $task->state = BackgroundTasks::STATE_INIT;
         return $task->save();
     }

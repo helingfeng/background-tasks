@@ -1,6 +1,16 @@
 # Background-Tasks
 
-**让你的 Functions 支持后台执行**
+任务参数：
+
+参数名称|是否必填|描述
+---|:--:|---:
+method|是|任务执行方法 Logic
+params|否|执行 Method 所需要的参数
+type|否|任务分类，自定义字符串
+creator|否|任务提交者，自定义字符串
+
+
+> 让你的 PHP 代码异步执行起来
 
 Laravel 扩展包，基于 MySQL 后台任务管理工具，使用 Laravel Event Console 执行任务，负责管理和监控任务代码执行状态，让后台任务执行更简单。
 
